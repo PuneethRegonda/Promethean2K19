@@ -49,22 +49,23 @@ class Event{
 
 
 class RegisteredEventsModel {
+  final String imageUrl;
   final String eventName;
   final String eventOrganisedBy;
-  final DateTime dateTime;
-  final String status;
-  final String temmates;
-  final List eventCordinatorsName;
-  final List eventCordinatorsContacts;
   final String registrationFee;
 
-
-  RegisteredEventsModel(this.registrationFee, this.temmates,
-      {this.eventName, this.eventOrganisedBy, this.dateTime, this.status, this.eventCordinatorsName, this.eventCordinatorsContacts});
-//  final String organiserMail;
+  RegisteredEventsModel(
+      {@required this.imageUrl, @required this.eventName, @required this.eventOrganisedBy, @required this.registrationFee});
 
 }
+/*
+imageUrl
+organizingDept
+EventName
+Registered
+amount
 
+*/
 
 // class Event{
   

@@ -52,6 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         now.year.toString();
   }
 
+
   Future<Null> _getEvent({String eventName, String organizingDept}) async {
     print(eventName);
     // print("getting $eventName form $eventType");

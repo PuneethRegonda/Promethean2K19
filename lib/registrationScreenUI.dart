@@ -1,12 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:promethean_2k19/common/messageBox.dart';
 import 'package:promethean_2k19/data_models/event_model.dart';
-// import 'package:promethean_2k19/screens/registeredEvents.dart';
 import 'package:promethean_2k19/screens/registrationDiaolog.dart';
-// import 'package:promethean_2k19/utils/urls.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:http/http.dart' as http;
 
 class ScreenRegistration extends StatefulWidget {
   final Event event;
@@ -21,7 +17,7 @@ class ScreenRegistration extends StatefulWidget {
 class _ScreenRegistrationState extends State<ScreenRegistration> {
   TextStyle textStyle =
       TextStyle(fontFamily: 'QuickSand', fontSize: 15.0, color: Colors.black);
- 
+
   eventDescriptionScreen() {
     TextStyle hintStyle =
         TextStyle(fontFamily: 'QuickSand', fontSize: 15.0, color: Colors.black);
@@ -59,7 +55,7 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
           ),
           backgroundColor: Colors.orange.withOpacity(0.7),
         ),
-        
+
       ];
     } else {
       return [
@@ -217,7 +213,7 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        widget.event.eventRules.replaceAll(".", ".\n -"),
+                        widget.event.eventRules.replaceAll(".", ".\n"),
                         style: textStyle.copyWith(
                             letterSpacing: 0.1, fontSize: 14.0),
                         textAlign: TextAlign.justify,
@@ -240,7 +236,7 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        widget.event.eventDetails.replaceAll(".", ".\n -"),
+                        widget.event.eventDetails.replaceAll(".", "\n"),
                         style: textStyle.copyWith(
                             letterSpacing: 0.1, fontSize: 14.0),
                         textAlign: TextAlign.justify,
@@ -270,20 +266,25 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                           Container(
                             child: Column(
                               children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      widget.event.cordinators.keys.toList()[0],
-                                      style: textStyle,
-                                    ),
-                                    Text(
-                                     '(Co-ordinator)',
-                                      style: textStyle.copyWith(
-                                        fontSize: 11.0,
-                                        fontStyle: FontStyle.italic,
+                                Container(
+                                  width: MediaQuery.of(context).size.width*0.45,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text(
+                                        widget.event.cordinators.keys.toList()[0],
+                                        softWrap: true,
+                                        style: textStyle
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                       '(Organizer)',
+                                        style: textStyle.copyWith(
+                                          fontSize: 11.0,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+//                                    alignment: WrapAlignment.start,
+                                  ),
                                 ),
                                 ActionChip(
                                   onPressed: () {
@@ -292,10 +293,8 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                                         .toString());
                                   },
                                   label: Text(
-                                    "Call", 
-
-                                    style:
-                                        textStyle.copyWith(color: Colors.white),
+                                    "Call",
+                                    style: textStyle.copyWith(color: Colors.white),
                                   ),
                                   backgroundColor: Colors.green,
                                 )
@@ -308,16 +307,23 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                             color: Colors.grey,
                           ),
                           Container(
+                            width: MediaQuery.of(context).size.width*0.45,
                             child: Column(
                               children: <Widget>[
-                                Row(
+                                Column(
+//                                  alignment: WrapAlignment.spaceEvenly,
                                   children: <Widget>[
-                                    Text(
-                                      widget.event.cordinators.keys.toList()[1],
-                                      style: textStyle,
+                                    Wrap(
+                                      children: <Widget>[
+                                        Text(
+                                          widget.event.cordinators.keys.toList()[1],
+                                          softWrap: true,
+                                          style: textStyle,
+                                        ),
+                                      ],
                                     ),
                                     Text(
-                                      "(Co-ordinator)",
+                                      "(Organizer)",
                                       style: textStyle.copyWith(
                                         fontSize: 11.0,
                                         fontStyle: FontStyle.italic,

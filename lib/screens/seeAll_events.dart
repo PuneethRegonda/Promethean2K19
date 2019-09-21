@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:promethean_2k19/common/alertsHelper.dart';
 import 'package:promethean_2k19/data_models/event_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:promethean_2k19/screens/registration_screen.dart';
@@ -15,14 +16,15 @@ class AllEventScreen extends StatefulWidget {
 }
 
 class _AllEventScreenState extends State<AllEventScreen> {
-  List<Event> allEvents = [];
+
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<Null> _getAllEvent({String deptName}) async {
+  Future<List<Event>> getAllEvent({String deptName}) async {
+    List<Event> allEvents = [];
     print("getting all events form $deptName");
     await http
         .get(Urls.getEvent + "$deptName.json")
@@ -44,15 +46,17 @@ class _AllEventScreenState extends State<AllEventScreen> {
               imageUrl: value['imageurl'],
               id: value['id'],
               cordinators: value['cordinators'],
-              // eventRegsFee: value['eventRegsFee'], 
+              // eventRegsFee: value['eventRegsFee'],
               teamFee: value['teamFee'],
-               individualFee: value['individualFee'], 
+               individualFee: value['individualFee'],
                organizerMailId: value['oraganizerMailId']);
           allEvents.add(event);
         });
         print('$fetchedData');
       });
     }); //get
+    return allEvents;
+
   }
 
   @override
@@ -85,7 +89,7 @@ class _AllEventScreenState extends State<AllEventScreen> {
   Widget _buildBody(BuildContext _context) {
     return Center(
       child: FutureBuilder(
-        future: _getAllEvent(deptName: widget.deptName),
+        future: getAllEvent(deptName: widget.deptName),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -127,7 +131,7 @@ class _AllEventScreenState extends State<AllEventScreen> {
                 );
               }
 
-              return _getfectchedEvent(allEvents);
+              return _getfectchedEvent(snapshot.data);
           }
           return Container();
         },
@@ -170,7 +174,7 @@ class Events extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushReplacement(CupertinoPageRoute(
+        Navigator.of(context).push(CupertinoPageRoute(
             builder: (BuildContext context) => RegistrationScreen(
                   organizingDepartment: event.organizedDept,
                   eventName: event.eventName.trim(),
@@ -195,14 +199,20 @@ class Events extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: Container(
-                      child: Image.network(
-                        event.imageUrl,
-                        fit: BoxFit.fill,
-                      ),
+                    borderRadius: BorderRadius.circular(9.0),
+                   child: Container(
                       width: double.infinity,
-                      height: 170.0,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(top:Radius.circular(5.0)),
+                        child: FadeInImage.memoryNetwork(
+                          fadeOutCurve: Curves.easeInOut,
+                          image: event.imageUrl,
+                          placeholder: kTransparentImage,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                     ),
                   ),
                 ),

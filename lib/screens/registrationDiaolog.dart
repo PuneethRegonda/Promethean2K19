@@ -72,7 +72,7 @@ class _PopScreenState extends State<PopScreen> {
   Future<Null> _submitForm(BuildContext buildContext) async {
     if (_formKey.currentState.validate()) {
       temp['eventName'] = event.eventName;
-      temp['eventType'] = event.eventType;
+//      temp['eventType'] = event.eventType;
       _formKey.currentState.save();
       print(temp);
       SharedPreferences _prefs = await SharedPreferences.getInstance();
@@ -86,7 +86,7 @@ class _PopScreenState extends State<PopScreen> {
         'eventDetails': event.eventDetails,
         'eventName': event.eventName,
         'eventRules': event.eventRules,
-        'eventType': event.eventType,
+        'eventType': temp['eventType'],
         'id': event.id,
         'imageUrl': event.imageUrl,
         'organizedBy': event.organizedBy,
@@ -96,8 +96,8 @@ class _PopScreenState extends State<PopScreen> {
         'referalEmailId': temp['email'],
         'organizedDept': event.organizedDept
       };
-      print("The Sender's Data is as follows:");
-      print(_sendEventData);
+      print("The Sender's Data is as follows: "+_sendEventData["eventType"]);
+//      print(_sendEventData);
       setState(() {
         new LoadingMessageBox(context, 'Registration Process', '').show();
       });
@@ -160,7 +160,6 @@ class _PopScreenState extends State<PopScreen> {
                       body: RegisteredEvents(uid));
                 }));
               });
-              // await http.post(Urls.getRoot,body: );
             });
           } catch (e) {
             print("error form second future");
@@ -168,11 +167,7 @@ class _PopScreenState extends State<PopScreen> {
         } else {
           Navigator.of(context).pop();
            Navigator.of(context).pop();
-        new MessageBox(
-                buildContext,
-                "You have already Registered.",
-                "Sorry",isSend: true)
-            .show();
+        new MessageBox(buildContext,"You have already Registered.","Sorry",isSend: true).show();
         return null;
         }
       } catch (error) {
@@ -252,6 +247,7 @@ class _PopScreenState extends State<PopScreen> {
   }
 
   Widget _buildTextFormTeam() {
+    temp['eventType'] = "Team";
     temp['amount'] = event.teamFee;
     temp['organizedDept'] = event.organizedDept;
     return Material(
@@ -369,6 +365,7 @@ class _PopScreenState extends State<PopScreen> {
   }
 
   Widget _buildTextFormIndividual() {
+    temp['eventType'] = "Individual";
     temp['amount'] = event.individualFee;
     temp['organizedDept'] = event.organizedDept;
     return Material(
@@ -683,7 +680,6 @@ class _PopScreenState extends State<PopScreen> {
                 ],
               ),
               Card(
-                // color: Colors.transparent,
                 elevation: 0,
                 child: Container(
                     child: Row(
@@ -903,7 +899,9 @@ class _PopScreenState extends State<PopScreen> {
 //     );
 //   }
 // }
+
 }
+
 // import 'dart:convert';
 
 // import 'package:flutter/cupertino.dart';
