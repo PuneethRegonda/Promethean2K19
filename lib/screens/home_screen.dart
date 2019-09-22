@@ -377,13 +377,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       height: 100.0,
       width: double.infinity,
       decoration: BoxDecoration(
-        // color: Colors.red,
+         color: Colors.transparent,
         borderRadius: new BorderRadius.circular(20.0),
       ),
-      child: ClipRRect(
-        borderRadius: new BorderRadius.circular(20.0),
-        child: Card(elevation: 5.0, child: networkCard(imageurl: imageurl)),
-      ),
+      child: Card(
+          elevation: 5.0,
+          child: networkCard(imageurl: imageurl)),
     );
   }
 
@@ -393,7 +392,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       height: 100.0,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: new BorderRadius.circular(20.0),
       ),
       child: Card(
@@ -427,7 +426,7 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
     return ListView.builder(
         controller: scrollController,
         physics: BouncingScrollPhysics(),
-        itemCount: mainScreenwidgets.length + 9,
+        itemCount: mainScreenwidgets.length + 10,
         itemBuilder: (BuildContext context, int index) {
           if (index >= mainScreenwidgets.length) {
             List<String> tempList = [
@@ -468,12 +467,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
       return "IT";
     } else if (branch.toLowerCase() == "mechanical engineering") {
       return "MECH";
+    } else if (branch.toLowerCase() == "mba") {
+      return "MBA";
     } else if (branch.toLowerCase() == "pharmaceutical engineering") {
       return "PHE";
     }
-       else if (branch.toLowerCase() == "mba") {
-        return "MBA";
-      }
+
     return "NOT THERE";
   }
 
@@ -706,12 +705,12 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
                 child: Card(
                   elevation: 0.0,
                   child: Container(
-                    width: width * 0.4,
-                    height: width * 0.4,
+                    width: width * 0.41,
+                    height: width * 0.38,
                     // color: Colors.red,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: AssetImage(imageAsset), fit: BoxFit.cover),
+                            image: AssetImage(imageAsset), fit: BoxFit.fill),
                         gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,

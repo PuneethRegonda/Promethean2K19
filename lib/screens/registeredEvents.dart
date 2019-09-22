@@ -50,6 +50,7 @@ class _RegisteredEventsState extends State<RegisteredEvents> {
     return PageView(
       children: event.map((event)=>RegisteredEventCard(registeredEventsModel: event,)).toList(),
     );
+
     //    return ListView.builder(
 //        itemCount: event.length,
 //        itemBuilder: (BuildContext context, int index) {
@@ -62,10 +63,12 @@ class _RegisteredEventsState extends State<RegisteredEvents> {
 
   @override
   Widget build(BuildContext context) {
-    print("Hello form registered Events");
+    final String uid = widget.uid;
+    print("uid is $uid");
     return Scaffold(
+      backgroundColor: Colors.white,
       body: FutureBuilder<List<RegisteredEventsModel>>(
-        future: getregisteredEvents(widget.uid),
+        future: getregisteredEvents(uid),
         builder: (BuildContext context,
             AsyncSnapshot<List<RegisteredEventsModel>> snapshot) {
           switch (snapshot.connectionState) {
@@ -79,6 +82,11 @@ class _RegisteredEventsState extends State<RegisteredEvents> {
             case ConnectionState.done:
               if (snapshot.hasError) {
                 print(snapshot.error);
+                if(snapshot.error.toString().contains("NoSuchMethodError: The method 'forEach' was called on null."))
+                  return Center(
+                    child: Text("You have not registered to any events Yet.",style: TextStyle(fontFamily: 'QuickSand',color: Colors.black),),
+                  );
+                else
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -150,84 +158,82 @@ class RegisteredEventCard extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 40.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(top:Radius.circular(5.0)),
-                    child: FadeInImage.memoryNetwork(
-                      fadeOutCurve: Curves.easeInOut,
-                      image: registeredEventsModel.imageUrl,
-                      placeholder: kTransparentImage,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      fit: BoxFit.fill,
-                    ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top:Radius.circular(5.0)),
+                  child: FadeInImage.memoryNetwork(
+                    fadeOutCurve: Curves.easeInOut,
+                    image: registeredEventsModel.imageUrl,
+                    placeholder: kTransparentImage,
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    fit: BoxFit.fill,
                   ),
                 ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(registeredEventsModel.eventName, style: textStyle),
-                        ),
-                        Spacer(),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            registeredEventsModel.eventOrganisedBy,
-                            style: textStyle.copyWith(
-                              fontSize: 13.0,
-                            ),
+              ),
+              SizedBox(
+                height: 8.0,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(registeredEventsModel.eventName, style: textStyle),
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          registeredEventsModel.eventOrganisedBy,
+                          style: textStyle.copyWith(
+                            fontSize: 13.0,
                           ),
                         ),
-
-                        Spacer(),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Chip(
-                         backgroundColor: Color(0xFF162A49),
-                          label: Text(
-                        "Registered",
-
-                        style: textStyle.copyWith(
-                          color: Colors.white
-                        ),
-                      )),
-                    ),
-                    Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: Text(
-                        '₹' + registeredEventsModel.registrationFee,
-                        style: textStyle,
                       ),
+
+                      Spacer(),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.0,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Chip(
+                       backgroundColor: Color(0xFF162A49),
+                        label: Text(
+                      "Registered",
+
+                      style: textStyle.copyWith(
+                        color: Colors.white
+                      ),
+                    )),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      '₹' + registeredEventsModel.registrationFee,
+                      style: textStyle,
                     ),
-                  ],
-                )
-              ],
-            ),
+                  ),
+                ],
+              )
+            ],
           ),
         ),
       ),

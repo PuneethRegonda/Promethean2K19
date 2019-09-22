@@ -56,7 +56,6 @@ class _AuthScreenState extends State<AuthScreen> {
       }).then((user) {
         if (user != null) {
           print(user.email);
-
           ///this set the uid and iA keys to sharedpreferences
           Helper.finishingTaskAfterSignIn(user,context);
           Navigator.of(context).pop(true);
@@ -64,14 +63,12 @@ class _AuthScreenState extends State<AuthScreen> {
           LoadingMessageBox(context, "Fetching User Proflie", "").show();
           Helper.checkUserInfoInDB(uid: user.uid).then((value) {
             if (value) {
-              print("hello 67 authScreen");
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                  builder: (BuildContext context) => HomeScreen(isFirstLaunch: true,)));
+              Navigator.of(context).pushNamedAndRemoveUntil('/homeScreen', (Route<dynamic> route) => false);
+//              Navigator.of(context).pushReplacement(CupertinoPageRoute(
+//                  builder: (BuildContext context) => HomeScreen(isFirstLaunch: true,)));
             } else {
-              Navigator.of(context).pushReplacement(CupertinoPageRoute( builder: (BuildContext context) => UserProfileForm(isFirstLaunch: true,)));
-            }
+              Navigator.of(context).pushNamedAndRemoveUntil('/userProfileForm', (Route<dynamic> route) => false);
+           }
           });
         } else {
           print("failed googleSign");
@@ -130,6 +127,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             fontWeight: FontWeight.w800,
                             color: Colors.white)),
                   ),
+
                   ConstrainedBox(
                     constraints: BoxConstraints.expand(
                       width: MediaQuery.of(context).size.height * 0.30,

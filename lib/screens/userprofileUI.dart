@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:promethean_2k19/common/helper.dart';
 import 'package:promethean_2k19/data_models/userinfo.dart';
 import 'package:promethean_2k19/screens/authScreen.dart';
 import 'package:promethean_2k19/screens/registeredEvents.dart';
@@ -234,14 +235,10 @@ class _UserProfileUIState extends State<UserProfileUI> {
   }
 
   static logout() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    bool t = await _prefs.clear();
-    print(t);
-    Navigator.of(_context).pop();
-    Navigator.of(_context).pop();
 
-    Navigator.of(_context).pushReplacement(
-        CupertinoPageRoute(builder: (BuildContext context) => AuthScreen()));
+    bool t = await Helper.logout();
+    print("From logout $t");
+    Navigator.of(_context).pushNamedAndRemoveUntil("/authScreen", (Route<dynamic> route) => false);
   }
 
   static confirmDialog() {

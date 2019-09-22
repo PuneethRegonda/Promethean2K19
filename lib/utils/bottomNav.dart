@@ -214,22 +214,17 @@ class _BottomNavyBarState extends State<BottomNavyBar> {
 
                 onTap: () {
 
-                  onItemSelected(index);
+
 
                   setState(() {
-
-                    widget.selectedIndex = index;
-
+                    if(widget.selectedIndex!=index)
+                      onItemSelected(index);
+                      widget.selectedIndex = index;
                   });
-
-                },
-
+                  },
                 child: _buildItem(item, widget.selectedIndex == index,item.width),
-
               );
-
             }).toList(),
-
           ),
 
         ),
@@ -245,7 +240,7 @@ class _BottomNavyBarState extends State<BottomNavyBar> {
 
 
 class BottomNavyBarItem {
-  final double width; 
+  final double width;
 
   final Icon icon;
 

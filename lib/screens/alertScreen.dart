@@ -40,6 +40,7 @@ class _AlertScreenState extends State<AlertScreen> {
                       borderRadius: BorderRadius.circular(3.0),
                     ),
                     child: FadeInImage.memoryNetwork(
+
                       fadeOutCurve: Curves.easeInOutSine,
                       placeholder: kTransparentImage,
                       image: alert.imageUrl,
@@ -49,15 +50,17 @@ class _AlertScreenState extends State<AlertScreen> {
                   alert.title,
                   style: titleTextStyle,
                 ),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      alert.content,
-                      style: contentTextStyle,
-                    ),
-                  ],
-                )
+                alert.content.isEmpty?Container():ExpansionTile(title: Text(""),children: <Widget>[
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        alert.content,
+                        style: contentTextStyle,
+                      ),
+                    ],
+                  )
+                ],)
               ],
             ),
           )),
@@ -65,7 +68,7 @@ class _AlertScreenState extends State<AlertScreen> {
   }
 
   Widget getList(List<Alert> list) {
-    return ListView.builder(
+    return list.isEmpty?Center(child: Text("No ALert Currenting",style: TextStyle(fontFamily: 'QuickSand',color: Colors.black),),):ListView.builder(
         itemCount: list.length,
         itemBuilder: (BuildContext context, int index) =>
             buildAlertCard(list[index]));
@@ -80,7 +83,7 @@ class _AlertScreenState extends State<AlertScreen> {
       fetchedData = json.decode(response.body);
       fetchedData.forEach((String uniqueId, dynamic v) {
         v.forEach((String k, dynamic value) {
-          final Alert alert = Alert(title:value["title"],content: "",imageUrl: value['imageUrl']);
+          final Alert alert = Alert(title:value["title"],content: value["content"],imageUrl: value['imageUrl']);
           listAlert.add(alert);
 //          list.add(alert);
         });
@@ -93,62 +96,59 @@ class _AlertScreenState extends State<AlertScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _future(),
-        builder: (BuildContext context, AsyncSnapshot<List<Alert>> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-            case ConnectionState.active:
-             return Center(child: CircularProgressIndicator(strokeWidth: 0.9,));
-              // return CupertinoAlertDialog(content: Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: <Widget>[
-              //     CircularProgressIndicator(),
-              //     Text("Loading...")
-              //   ],
-              // ),);
-             
-              break;
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset("assets/tryAgain.png"),
-                      Container(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Something went Wrong !!"),
-                            ),
-                            RaisedButton.icon(
-                              color: Colors.blue,
-                              icon: Icon(
-                                Icons.refresh,
-                                color: Colors.yellow,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: FutureBuilder(
+          future: _future(),
+          builder: (BuildContext context, AsyncSnapshot<List<Alert>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+              case ConnectionState.active:
+               return Center(child: CircularProgressIndicator(strokeWidth: 0.9,));
+
+
+                break;
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset("assets/tryAgain.png"),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("Something went Wrong !!"),
                               ),
-                              onPressed: () {
-                                setState(() {});
-                              },
-                              label: Text(
-                                "Try Again",
-                                style: TextStyle(color: Colors.white),
+                              RaisedButton.icon(
+                                color: Colors.blue,
+                                icon: Icon(
+                                  Icons.refresh,
+                                  color: Colors.yellow,
+                                ),
+                                onPressed: () {
+                                  setState(() {});
+                                },
+                                label: Text(
+                                  "Try Again",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),                    ],
-                  ),
-                );
-              }
-              return getList(snapshot.data);
-              break;
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+                            ],
+                          ),
+                        ),                    ],
+                    ),
+                  );
+                }
+                return getList(snapshot.data);
+                break;
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
+    );
   }
 }

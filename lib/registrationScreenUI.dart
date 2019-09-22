@@ -213,7 +213,7 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        widget.event.eventRules.replaceAll(".", ".\n"),
+                        widget.event.eventRules,
                         style: textStyle.copyWith(
                             letterSpacing: 0.1, fontSize: 14.0),
                         textAlign: TextAlign.justify,
@@ -236,7 +236,7 @@ class _ScreenRegistrationState extends State<ScreenRegistration> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Text(
-                        widget.event.eventDetails.replaceAll(".", "\n"),
+                        widget.event.eventDetails,
                         style: textStyle.copyWith(
                             letterSpacing: 0.1, fontSize: 14.0),
                         textAlign: TextAlign.justify,

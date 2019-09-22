@@ -34,6 +34,9 @@ class Helper {
         return 0;
       }
     } else {
+      print("No auth no user Set Condition called in Helper ");
+//      print("But Authenticated User is ${authenticatedUser.uid}");
+
       authenticatedUser = new User(uid: "");
       // "NoAuthNoUserSet"
       return -1;
@@ -42,6 +45,12 @@ class Helper {
 
   static void setauthenticatedUser({String uid}) {
     authenticatedUser = new User(uid: uid);
+  }
+
+  static Future<bool> logout() async {
+    SharedPreferences _prefs = await Helper.getpreferences();
+    bool o = await _prefs.clear();
+    return o;
   }
 
   static finishingTaskAfterSignIn(FirebaseUser user,BuildContext context) async {
@@ -58,15 +67,15 @@ class Helper {
 
       }
     );
-    print("task after signin");
-    SharedPreferences _prefs = await _sharedPreferences;
+     print("task after signin");
+     SharedPreferences _prefs = await _sharedPreferences;
     _prefs.setString("uid", user.uid);
     _prefs.setBool("iA", true);
   }
 
   static finishUserInfoSet({bool isUserSet}) async {
-    print("seting UIS to $isUserSet");
-    SharedPreferences _prefs = await _sharedPreferences;
+     print("seting UIS to $isUserSet");
+     SharedPreferences _prefs = await _sharedPreferences;
     _prefs.setBool("UIS", isUserSet);
 
   }
@@ -79,6 +88,7 @@ class Helper {
 */
   static Future<bool> checkUserInfoInDB({String uid}) async {
     bool out;
+    Helper.authenticatedUser = new User(uid: uid);
     await http.get(Urls.getUsers+"/$uid/userInfo.json").then((http.Response response) {
       if (json.decode(response.body)!= null) {
         print(json.decode(response.body).toString()+"is the response body");

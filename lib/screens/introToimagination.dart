@@ -103,8 +103,9 @@ class _IntroToImaginationState extends State<IntroToImagination>
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                          builder: (BuildContext context) => AuthScreen()));
+                      Navigator.pushReplacementNamed(context, "/authScreen");
+//                      Navigator.of(context).pushReplacement(CupertinoPageRoute(
+//                          builder: (BuildContext context) => AuthScreen()));
                     },
                   ),
                 ),

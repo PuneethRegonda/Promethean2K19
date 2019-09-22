@@ -9,9 +9,9 @@ import 'package:promethean_2k19/utils/urls.dart';
 class Sponser{
   final String name;
   final String imageUrl;
-  Sponser({this.name, this.imageUrl});
+  final String content;
+  Sponser({this.content, this.name, this.imageUrl});
 }
-
 
 class SponserScreen extends StatefulWidget {
   @override
@@ -55,6 +55,17 @@ class _SponserScreenState extends State<SponserScreen> {
                   sponser.name,
                   style: titleTextStyle,
                 ),
+                sponser.content.isEmpty?Container():ExpansionTile(title: Text(""),children: <Widget>[
+                  Wrap(
+                    alignment: WrapAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        sponser.content,
+                        style: contentTextStyle,
+                      ),
+                    ],
+                  )
+                ],)
               ],
             ),
           )),
@@ -63,6 +74,7 @@ class _SponserScreenState extends State<SponserScreen> {
 
   Widget getList(List<Sponser> sponser ) {
     return ListView.builder(
+        physics: BouncingScrollPhysics(),
         itemCount: sponser.length,
         itemBuilder: (BuildContext context, int index) =>
             buildSponserCard(sponser[index]));
@@ -79,7 +91,7 @@ class _SponserScreenState extends State<SponserScreen> {
       fetchedData = json.decode(response.body);
       fetchedData.forEach((String uniqueId, dynamic v) {
         v.forEach((String k, dynamic value) {
-          final Sponser sponser = Sponser(name:value["name"],imageUrl: value['imageUrl']);
+          final Sponser sponser = Sponser(name:value["name"],imageUrl: value['imageUrl'],content: value["content"]);
           listAlert.add(sponser);
         });
         print('$fetchedData');
@@ -91,55 +103,68 @@ class _SponserScreenState extends State<SponserScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _future(),
-        builder: (BuildContext context, AsyncSnapshot<List<Sponser>> snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-            case ConnectionState.active:
-             return Center(child: CircularProgressIndicator(strokeWidth: 0.9,));
-              break;
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                print(snapshot.error);
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset("assets/tryAgain.png"),
-                      Container(
-                        child: Column(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text("Something went Wrong !!"),
-                            ),
-                            RaisedButton.icon(
-                              color: Colors.blue,
-                              icon: Icon(
-                                Icons.refresh,
-                                color: Colors.yellow,
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+        title: Text("Our Sponsors",style: TextStyle(
+          fontFamily: 'QuickSand',
+          color: Colors.black,
+        ),),
+      ),
+      backgroundColor: Colors.white,
+      body: FutureBuilder(
+          future: _future(),
+          builder: (BuildContext context, AsyncSnapshot<List<Sponser>> snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+              case ConnectionState.active:
+               return Center(child: CircularProgressIndicator(strokeWidth: 0.9,));
+                break;
+              case ConnectionState.done:
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image.asset("assets/tryAgain.png"),
+                        Container(
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("Something went Wrong !!"),
                               ),
-                              onPressed: () {
-                                setState(() {});
-                              },
-                              label: Text(
-                                "Try Again",
-                                style: TextStyle(color: Colors.white),
+                              RaisedButton.icon(
+                                color: Colors.blue,
+                                icon: Icon(
+                                  Icons.refresh,
+                                  color: Colors.yellow,
+                                ),
+                                onPressed: () {
+                                  setState(() {});
+                                },
+                                label: Text(
+                                  "Try Again",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),                    ],
-                  ),
-                );
-              }
-              print("sponsor ${snapshot.data.length}");
-              return getList(snapshot.data);
-              break;
-          }
-          return Center(child: CircularProgressIndicator());
-        });
+                            ],
+                          ),
+                        ),                    ],
+                    ),
+                  );
+                }
+                print("sponsor ${snapshot.data.length}");
+                return getList(snapshot.data);
+                break;
+            }
+            return Center(child: CircularProgressIndicator());
+          }),
+    );
   }
 }

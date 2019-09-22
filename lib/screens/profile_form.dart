@@ -51,11 +51,8 @@ class _UserProfileFormState extends State<UserProfileForm> {
               body: json.encode(_formData))
           .then((http.Response response) {
         _prefs.setBool('UIS', true);
-        Navigator.of(context).pop();
-//        print("before pop");
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (BuildContext context) => HomeScreen(isFirstLaunch: widget.isFirstLaunch,)));
-      }).catchError(
+        Navigator.of(context).pushNamedAndRemoveUntil('/homeScreen', (Route<dynamic> route) => false);
+          }).catchError(
         (_, __) {
           Navigator.of(context).pop();
           showDialog(

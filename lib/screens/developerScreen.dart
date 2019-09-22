@@ -223,15 +223,25 @@ class _DevelopersScreenState extends State<DevelopersScreen>
   @override
   Widget build(BuildContext context) {
     print("${devList.length}");
-    return ListView.builder(
-      itemCount: devList.length+1,
-      itemBuilder: (BuildContext context, int index) {
-        if(index<devList.length){
-          return buildDev(devList[index]);
-        }
-        else
-          return SizedBox(height: MediaQuery.of(context).size.height*0.11,);
-      },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+            color: Colors.black
+        ),
+        title: Text("Developers",style: TextStyle(fontFamily: 'QuickSand',color: Colors.black,)),
+      ),
+      body: ListView.builder(
+        physics: BouncingScrollPhysics(),
+        itemCount: devList.length+1,
+        itemBuilder: (BuildContext context, int index) {
+          if(index<devList.length){
+            return buildDev(devList[index]);
+          }
+          else
+            return SizedBox(height: MediaQuery.of(context).size.height*0.11,);
+        },
+      ),
     );
   }
 }

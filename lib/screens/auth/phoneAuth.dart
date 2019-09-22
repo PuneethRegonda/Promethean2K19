@@ -177,12 +177,14 @@ class _PhoneAuthState extends State<PhoneAuth>
           LoadingMessageBox(context, "Fetching User Proflie", "").show();
           Helper.checkUserInfoInDB(uid: user.uid).then((value) {
             if (value) {
-              Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                  builder: (BuildContext context) => HomeScreen(isFirstLaunch: true,)));
+              Navigator.pushNamedAndRemoveUntil(context, "/homeScreen", (Route<dynamic> route)=>false);
+//              Navigator.of(context).pushReplacement(CupertinoPageRoute(
+//                  builder: (BuildContext context) => HomeScreen(isFirstLaunch: true,)));
             } else {
-              Navigator.of(context).pushReplacement(CupertinoPageRoute(
-                  builder: (BuildContext context) => UserProfileForm(isFirstLaunch: true,)));
-            }
+              Navigator.pushNamedAndRemoveUntil(context, "/userProfileForm", (Route<dynamic> route)=>false);
+//              Navigator.of(context).pushReplacement(CupertinoPageRoute(
+//                  builder: (BuildContext context) => UserProfileForm(isFirstLaunch: true,)));
+              }
           });
         } else {
           _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -297,7 +299,7 @@ class _PhoneAuthState extends State<PhoneAuth>
           child: Align(
             alignment: Alignment(-0.7, 0.0),
             child: Text(
-              "Enter Recieved OTP here",
+              "Enter Received OTP here",
               style: TextStyle(
                   fontFamily: 'QuickSand',
                   fontSize: deviceSize.width * 0.06,
