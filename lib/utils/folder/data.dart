@@ -46,7 +46,7 @@ class Data {
 class Styles{
   static final TextStyle
       heading = TextStyle(fontSize: 20.0,fontWeight: FontWeight.w800,fontFamily: 'QuickSand'),
-      pictureHeading = TextStyle(fontSize: 20.0,fontWeight: FontWeight.w800),
-      pictureDescription = TextStyle(fontSize: 16.0,fontWeight: FontWeight.w400),
+      pictureHeading = TextStyle(fontSize: 20.0,fontWeight: FontWeight.w800,fontFamily: 'QuickSand'),
+      pictureDescription = TextStyle(fontSize: 16.0,fontWeight: FontWeight.w400,fontFamily: 'QuickSand'),
       description = TextStyle(fontSize: 14.0,fontWeight: FontWeight.w400,fontFamily: 'QuickSand',wordSpacing: 0.07);
 }

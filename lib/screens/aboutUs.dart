@@ -86,6 +86,17 @@ class _AboutCollegeState extends State<AboutCollege>
                   )));
         }),
     AboutModel(
+        icon: "assets/council.png",
+        title: "Council",
+        onPressed: (BuildContext context) {
+          Navigator.of(context).push(CupertinoPageRoute(
+              builder: (BuildContext context) => CustomScreen(
+                isCounsilScreen: true,
+                name: "council",
+                screenTitle: "Council",
+              )));
+        }),
+    AboutModel(
         icon: "assets/studentco.png",
         title: "Department Coordinators",
         onPressed: (BuildContext context) {
@@ -453,10 +464,11 @@ class AboutCollegeScreen extends StatelessWidget {
 }
 
 class CustomScreen extends StatelessWidget {
+  final bool isCounsilScreen;
   final String name;
   final String screenTitle;
 
-  CustomScreen({Key key, this.name, this.screenTitle}) : super(key: key);
+  CustomScreen({Key key, this.name, this.screenTitle,this.isCounsilScreen=false}) : super(key: key);
 
   final TextStyle titleTextStyle = new TextStyle(
       fontFamily: 'QuickSand',
@@ -464,7 +476,7 @@ class CustomScreen extends StatelessWidget {
       fontWeight: FontWeight.w500,
       color: Colors.black);
 
-  Future<List<Coordinator>> _future() async {
+  Future<List<GoverningBody>> _future() async {
     List<Coordinator> listCo = [];
     await http
         .get(Urls.getRoot + name + ".json")
@@ -483,6 +495,176 @@ class CustomScreen extends StatelessWidget {
       });
     });
     return listCo;
+  }
+
+  Future<List<GoverningBody>> _futureCouncil() async{
+    List<Council> listCo = [];
+    await http
+        .get(Urls.getRoot + name + ".json")
+        .then((http.Response response) {
+      Map<String, dynamic> fetchedData = {};
+      fetchedData = json.decode(response.body);
+      fetchedData.forEach((String uniqueId, dynamic v) {
+        v.forEach((String k, dynamic value) {
+          final Council council = new Council(
+              role: value['role'],
+            isprincipalDean: value['isprincipalDean'].toString().contains("True")?true:false,
+              mailId: value["mailId"],
+              imageUrl: value['imageUrl'],
+              desc: value["desc"],
+              phone: value['phone'].toString(),
+              name: value['name']);
+          listCo.add(council);
+        });
+      });
+    });
+    return listCo;
+
+  }
+
+
+  Widget _councilCards(BuildContext context, Council council) {
+    Widget _bottom;
+    if (council.mailId.length == 0) {
+      _bottom = Container();
+    } else {
+      _bottom = Container(
+        height: 50.0,
+        //color: Colors.blue,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 60.0, right: 60.0),
+              child: InkWell(
+                onTap: () {
+                  launch("tel:+91 ${council.phone}");
+                },
+                child: Icon(
+                  Icons.phone,
+                  color: Colors.blue,
+                  size: 30.0,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 60.0, right: 60.0),
+              child: InkWell(
+                onTap: () {
+                  launch("mailto:${council.mailId}?subject=Support Request&body=");
+                },
+                child: Icon(Icons.email, color: Colors.blue, size: 30.0),
+              ),
+            )
+          ],
+        ),
+      );
+    }
+
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        elevation: 8.0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 1.0,
+                      spreadRadius: 1.0)
+                ],
+              ),
+              child: ClipRRect(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                borderRadius: BorderRadius.circular(
+                    MediaQuery.of(context).size.width * 0.27),
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.27,
+                  height: MediaQuery.of(context).size.width * 0.27,
+                  decoration: ShapeDecoration(
+                      shape: CircleBorder(), color: Colors.white),
+                  child: Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.width * 0.0111),
+                    child: DecoratedBox(
+                      child: ClipRRect(
+                        clipBehavior: Clip.antiAlias,
+                        borderRadius: BorderRadius.circular(
+                            MediaQuery.of(context).size.width * 0.27),
+                        child: Container(
+                          child: council.imageUrl.isEmpty?CircleAvatar(
+                            child: Icon(Icons.add_a_photo,color: Colors.grey,),
+                            backgroundColor: Colors.grey[100],
+                          ):
+                          FadeInImage.memoryNetwork(
+                            fit: BoxFit.fill,
+                            fadeOutCurve: Curves.easeInOutSine,
+                            placeholder: kTransparentImage,
+                            image: council.imageUrl,
+                          ),
+                        ),
+                      ),
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: CircleBorder(),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+
+            Text(
+              council.name,
+              textAlign: TextAlign.center,
+              style: Styles.pictureHeading,
+            ),
+
+            Text(
+              council.role,
+              textAlign: TextAlign.justify,
+              style: Styles.pictureDescription.copyWith(
+                  fontSize: 15.0,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.normal
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                children: <Widget>[
+                  Text(
+                    council.desc,
+                    textAlign: TextAlign.justify,
+                    style: Styles.pictureDescription,
+                  ),
+                ],
+              ),
+            ),
+            council.mailId.length != 0
+                ? Divider()
+                : SizedBox(
+              height: 10.0,
+            ),
+            _bottom
+          ],
+        ),
+      ),
+    );
   }
 
   buildcoordinatorCard(Coordinator coordinator, BuildContext context) {
@@ -618,9 +800,9 @@ class CustomScreen extends StatelessWidget {
         ),
       ),
       body: FutureBuilder(
-          future: _future(),
+          future: isCounsilScreen?_futureCouncil():_future(),
           builder: (BuildContext context,
-              AsyncSnapshot<List<Coordinator>> snapshot) {
+              AsyncSnapshot<List<GoverningBody>> snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
               case ConnectionState.waiting:
@@ -641,8 +823,9 @@ class CustomScreen extends StatelessWidget {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
+                        elevation: 0.0,
                         child:
-                            buildcoordinatorCard(snapshot.data[index], context),
+                            isCounsilScreen?_councilCards(context, snapshot.data[index]):buildcoordinatorCard(snapshot.data[index], context),
                       );
                     });
                 break;
@@ -664,9 +847,23 @@ void _launchUrl(String phoneno) async {
   }
 }
 
+class GoverningBody{
 
+}
 
-class Coordinator {
+class Council extends GoverningBody{
+  final String role;
+  final String imageUrl;
+  final String name;
+  final String desc;
+  final String mailId;
+  final String phone;
+  final bool isprincipalDean;
+
+  Council({this.role,this.imageUrl, this.name, this.desc, this.mailId, this.phone, this.isprincipalDean=false});
+}
+
+class Coordinator extends GoverningBody{
   final String imageUrl;
   final String name;
   final String branch;
